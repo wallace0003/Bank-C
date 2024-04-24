@@ -37,3 +37,7 @@ int tranferencia(){
     return 1;
 }
 
+void clearBuffer(){
+    int c;
+    while ((c = getchar()) != '\n' && c != EOF);
+}

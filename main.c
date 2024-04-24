@@ -2,9 +2,10 @@
 #include "bank.h"
 
 int main() {
-    int opcao;
-
+    Cliente clientes[total];
+    int posicao = 0;
     while (1) {
+        int opcao;
         printf("\n");
         printf("1 - Criar cliente\n");
         printf("2 - Apagar cliente\n");

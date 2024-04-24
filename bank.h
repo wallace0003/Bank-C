@@ -14,9 +14,17 @@ typedef struct{
 //Funções
 
 int criar_cliente();
+
 int listar_clientes();
+
 int apagar_cliente();
+
 int debitar();
+
 int depositar();
+
 int extrato();
+
 int tranferencia();
+
+void clearBuffer();
