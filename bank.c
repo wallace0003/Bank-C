@@ -2,42 +2,38 @@
 #include <stdio.h>
 #include <string.h>
 
-int funcao1(){
-    printf("função 1 foi chamada");
+int criar_cliente(){
+    printf("função criar\n");
     return 1;
 }
 
-int funcao2(){
-    printf("função 2 foi chamada\n");
+int apagar_cliente(){
+    printf("função apagar\n");
     return 1;
 }
 
-int funcao3(){
-    printf("Função 3 foi chamada\n");
+int listar_clientes(){
+    printf("Função listar\n");
     return 1;
 }
 
-int funcao4(){
-    printf("função 4 foi chamada\n");
+int debitar(){
+    printf("função debitar\n");
     return 1;
 }
 
-int funcao5(){
-    printf("função 5 foi chamada\n");
+int depositar(){
+    printf("função depositar\n");
     return 1;
 }
 
-int funcao6(){
-    printf("função 6 foi chamada\n");
+int extrato(){
+    printf("função extrato\n");
     return 1;
 }
 
-int funcao7(){
-    printf("função 7 foi chamada\n");
+int tranferencia(){
+    printf("função transferencia\n");
     return 1;
 }
 
-int funcao8(){
-    printf("função 8 foi chamada\n");
-    return 1;
-}

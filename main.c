@@ -5,25 +5,32 @@ int main() {
     int opcao;
 
     while (1) {
-        printf("\nOpção: ");
+        printf("\n");
+        printf("1 - Criar cliente\n");
+        printf("2 - Apagar cliente\n");
+        printf("3 - Listar clientes\n");
+        printf("4 - Débito\n");
+        printf("5 - Depósito\n");
+        printf("6 - Extrato\n");
+        printf("7 - Transferências\n");
+        printf("0 - Sair\n");
+        printf("\nDigite a opção desejada:");
         scanf("%d", &opcao);
 
         if (opcao == 1) {
-            funcao1();
+            criar_cliente();
         } else if (opcao == 2) {
-            funcao2();
+            apagar_cliente();
         } else if (opcao == 3) {
-            funcao3();
+            listar_clientes();
         } else if (opcao == 4) {
-            funcao4();
+            debitar();
         } else if (opcao == 5) {
-            funcao5();
+            depositar();
         } else if (opcao == 6) {
-            funcao6();
+            extrato();
         } else if (opcao == 7) {
-            funcao7();
-        } else if (opcao == 8) {
-            funcao8();
+            tranferencia();
         } else if (opcao == 0) {
             printf("Saindo...");
             break;
@@ -31,6 +38,5 @@ int main() {
             printf("Opção inválida!\n");
         }
     }
-
-    return 0;
+    return 1;
 }
