@@ -2,50 +2,75 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
+#include <ctype.h>
 
-bool validarEscolhaConta(const char *tipo) {
-  const char *contas[] = {"Conta corrente", "Conta poupança", "Conta salário"};
 
-  for (int i = 0; i < 3; i++) {
-    if (strcmp(contas[i], tipo) == 0) {
-      return true;
-    }
+
+int contem_apenas_letras(const char *str) {
+  if (*str == '\0') {
+      return 0; 
   }
-  return false;
+  while (*str) {
+    if (!isalpha(*str) && *str != ' ') { // Verifica se o caractere não é uma letra ou espaço
+      return 0;
+    }
+    str++;
+  }
+  return 1;
 }
 
-int criar_cliente(Cliente clientes[], int *pos) {
-  if (*pos >= total) {
-    printf("Você chegou ao maximo de clientes no seu banco!!");
-    return 0;
-  }
-  printf("Digite o nome do cliente: ");
-  fgets(clientes[*pos].nome, max_nome, stdin);
 
-  printf("Digite o CPF:");
-  scanf("%d", &clientes[*pos].cpf);
-
-  printf("Digite o tipo de conta do cliente: \n Conta corrente \n Conta "
-         "poupança \n Conta salário ");
-
-  fgets(clientes[*pos].tipo_conta, max_tipo_conta, stdin);
-  if (validarEscolhaConta(clientes[*pos].tipo_conta) == false) {
-    printf("Tipo de conta nao existe no nossos registros");
+int criar_cliente(Cliente clientes[], int *posicao) {
+  // Verificando se a posição não excedeu o total.
+  if (*posicao >= total) {
+    printf("Não é possível adicionar mais clientes, a lista de clientes está cheia.\n");
     return 0;
   }
 
-  printf("Deposito inicial: ");
-  scanf("%f", &clientes[*pos].saldo);
-  if (clientes[*pos].saldo < 0) {
-    printf("O saldo precisa ser positivo!! ");
+  // Pedindo para o usuário os dados e salvando-os na struct
+  clearBuffer();
+  printf("Nome: ");
+  fgets(clientes[*posicao].nome, max_nome, stdin);
+  // Removendo o caractere de nova linha, se presente
+  clientes[*posicao].nome[strcspn(clientes[*posicao].nome, "\n")] = '\0';
+  // Verificando se o nome não está vazio e contém apenas letras
+  if (!contem_apenas_letras(clientes[*posicao].nome)) {
+    printf("O nome não pode estar vazio e só pode conter apenas letras.\n");
     return 0;
   }
 
-  printf("Digite uma senha: ");
-  fgets(clientes[*pos].senha, max_senha, stdin);
+  printf("CPF: ");
+  scanf("%d", &clientes[*posicao].cpf);
 
-  (*pos)++;
-  return 1;
+int tipo_con;
+  printf("Tipo de conta (1 - Comum, 2 - Plus): ");
+  scanf("%d", &tipo_con);
+  // Verificando se o tipo de conta é válido
+  if (tipo_con != 1 && tipo_con != 2) {
+    printf("Tipo de conta inválido.\n");
+    return 0;
+  } else if (tipo_con == 1) {
+    strcpy(clientes[*posicao].tipo_conta, "Comum");
+  } else if(tipo_con == 2) {
+    strcpy(clientes[*posicao].tipo_conta, "Plus");
+  }
+
+
+  printf("Saldo inicial da conta: ");
+  scanf("%f", &clientes[*posicao].saldo);
+
+  printf("Senha do usuário: ");
+  clearBuffer();
+  fgets(clientes[*posicao].senha, max_senha, stdin);
+  // Removendo o caractere de nova linha, se presente
+  clientes[*posicao].senha[strcspn(clientes[*posicao].senha, "\n")] = '\0';
+
+  (*posicao)++; // Incrementa a posição
+
+  printf("Cliente adicionado com sucesso!\n");
+
+  return 1; // Retorna 1 indicando que o cliente foi criado com sucesso
 }
 
 int apagar_cliente() {
