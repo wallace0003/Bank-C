@@ -23,7 +23,7 @@ int main() {
     } else if (opcao == 2) {
       apagar_cliente();
     } else if (opcao == 3) {
-      listar_clientes();
+      listar_clientes(clientes, &posicao);
     } else if (opcao == 4) {
       debitar();
     } else if (opcao == 5) {

@@ -78,8 +78,21 @@ int apagar_cliente() {
   return 1;
 }
 
-int listar_clientes() {
-  printf("Função listar\n");
+int listar_clientes(Cliente clientes[], int *posicao) {
+  // Verificação de há contatos
+  if (*posicao == 0) {
+    printf("Não há contatos, impossível listá-los.");
+    return 0;
+  }
+
+  // Looping para printar os contatos
+  for (int i = 0; i < *posicao; i++) {
+    printf("Posição: %d\t", i + 1);
+    printf("Nome: %s\t", clientes[i].nome);
+    printf("CPF: %d\t", clientes[i].cpf);
+    printf("Tipo de conta: %s\t", clientes[i].tipo_conta);
+    printf("Saldo atual: %.2f\n", clientes[i].saldo);
+  }
   return 1;
 }
 

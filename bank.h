@@ -13,9 +13,9 @@ typedef struct{
 
 //Funções
 
-int criar_cliente(Cliente clientes[], int *pos);
+int criar_cliente(Cliente clientes[], int *posicao);
 
-int listar_clientes();
+int listar_clientes(Cliente clientes[], int *posicao);
 
 int apagar_cliente();
 
