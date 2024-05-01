@@ -101,9 +101,41 @@ int debitar() {
   return 1;
 }
 
-int depositar() {
-  printf("função depositar\n");
-  return 1;
+int depositar(Cliente clientes[], int *posicao) {
+    int cpf;
+    char senha[max_senha];
+    float valor_deposito;
+
+    // Solicitar CPF e senha do usuário para autenticação
+    printf("CPF: ");
+    scanf("%d", &cpf);
+    clearBuffer(); // Limpar o buffer após a leitura do inteiro
+    printf("Senha: ");
+    fgets(senha, max_senha, stdin);
+    senha[strcspn(senha, "\n")] = '\0'; // Remover o caractere de nova linha
+
+    // Verifica se o CPF e a senha correspondem a algum cliente
+    int i;
+    for (i = 0; i < *posicao; i++) {
+        if (clientes[i].cpf == cpf && strcmp(clientes[i].senha, senha) == 0) {
+            // CPF e senha correspondem, solicitar valor do depósito
+            printf("Valor do depósito: ");
+            scanf("%f", &valor_deposito);
+            // Verificar se o valor do depósito é válido
+            if (valor_deposito <= 0) {
+                printf("Valor de depósito inválido.\n");
+                return 0;
+            }
+            // Realizar o depósito adicionando o valor ao saldo do cliente
+            clientes[i].saldo += valor_deposito;
+            printf("Depósito realizado com sucesso. Novo saldo: %.2f\n", clientes[i].saldo);
+            return 1;
+        }
+    }
+
+    // Se o loop terminar, significa que o cliente não foi encontrado
+    printf("CPF ou senha incorretos. Não foi possível realizar o depósito.\n");
+    return 0;
 }
 
 int extrato() {

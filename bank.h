@@ -21,7 +21,7 @@ int apagar_cliente();
 
 int debitar();
 
-int depositar();
+int depositar(Cliente clientes[], int *posicao);
 
 int extrato();
 
