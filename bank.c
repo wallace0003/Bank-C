@@ -96,10 +96,69 @@ int listar_clientes(Cliente clientes[], int *posicao) {
   return 1;
 }
 
-int debitar() {
-  printf("função debitar\n");
-  return 1;
+// Função para debitar valor da conta de um cliente
+int debitar(Cliente clientes[], int *posicao) {
+    int cpf;
+    char senha[max_senha];
+    float valor;
+
+    // Solicitando dados do usuário
+    printf("CPF: ");
+    scanf("%d", &cpf);
+    printf("Senha: ");
+    clearBuffer();
+    fgets(senha, max_senha, stdin);
+    // Removendo o caractere de nova linha, se presente
+    senha[strcspn(senha, "\n")] = '\0';
+    printf("Valor: ");
+    scanf("%f", &valor);
+
+    // Verificando os dados do cliente
+    for (int i = 0; i < *posicao; i++) {
+        if (cpf == clientes[i].cpf && strcmp(senha, clientes[i].senha) == 0) {
+            // Verificando limite de saldo negativo
+            float verificando_limite_saldo = clientes[i].saldo - valor;
+            float tarifa_saque;
+
+            if (verificando_limite_saldo < -1000 && strcmp(clientes[i].tipo_conta, "Comum") == 0) {
+                printf("\nSeu limite de saldo negativo é -1000\n");
+                printf("Impossível realizar o débito, seu saldo ficaria %.2f\n", verificando_limite_saldo);
+                return 0;
+            } else if (verificando_limite_saldo < -5000 && strcmp(clientes[i].tipo_conta, "Plus") == 0) {
+                printf("\nSeu limite de saldo negativo é -5000\n");
+                printf("Impossível realizar o débito, seu saldo ficaria: R$%.2f\n", verificando_limite_saldo);
+                return 0;
+            }
+
+            // Calculando tarifa de saque
+            if (strcmp(clientes[i].tipo_conta, "Comum") == 0) {
+                tarifa_saque = 0.05 * valor;
+            } else if (strcmp(clientes[i].tipo_conta, "Plus") == 0) {
+                tarifa_saque = 0.03 * valor;
+            }
+
+            // Descontando tarifa do saldo
+            clientes[i].saldo -= tarifa_saque;
+            printf("\nFoi descontado do valor de seu saque: R$%.2f\n", tarifa_saque);
+
+            // Realizando o saque
+            clientes[i].saldo -= valor;
+            printf("Valor sacado: R$%.2f\n", valor);
+
+            // Registrando transação
+            printf("Transação registrada com sucesso!\n");
+
+            return 1;
+        }
+    }
+
+    // Caso não encontre o cliente
+    printf("\nCPF ou senha não encontrados.\n");
+    return 0;
 }
+
+
+
 
 int depositar(Cliente clientes[], int *posicao) {
     int cpf;

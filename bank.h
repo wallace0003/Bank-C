@@ -19,7 +19,7 @@ int listar_clientes(Cliente clientes[], int *posicao);
 
 int apagar_cliente();
 
-int debitar();
+int debitar(Cliente clientes[], int *posicao);
 
 int depositar(Cliente clientes[], int *posicao);
 

@@ -25,7 +25,7 @@ int main() {
     } else if (opcao == 3) {
       listar_clientes(clientes, &posicao);
     } else if (opcao == 4) {
-      debitar();
+      debitar(clientes, &posicao);
     } else if (opcao == 5) {
       depositar(clientes, &posicao);
     } else if (opcao == 6) {
