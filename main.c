@@ -31,7 +31,7 @@ int main() {
     } else if (opcao == 6) {
       extrato();
     } else if (opcao == 7) {
-      tranferencia();
+      tranferencia(clientes, &posicao);
     } else if (opcao == 0) {
       printf("Saindo...");
       break;

@@ -25,6 +25,6 @@ int depositar(Cliente clientes[], int *posicao);
 
 int extrato();
 
-int tranferencia();
+int tranferencia(Cliente clientes[], int *posicao);
 
 void clearBuffer();
