@@ -29,7 +29,7 @@ int main() {
     } else if (opcao == 5) {
       depositar(clientes, &posicao);
     } else if (opcao == 6) {
-      extrato();
+      extrato(clientes, &posicao);
     } else if (opcao == 7) {
       tranferencia(clientes, &posicao);
     } else if (opcao == 0) {
