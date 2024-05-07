@@ -261,14 +261,13 @@ int tranferencia(Cliente clientes[], int *posicao) {
     int cpf_remetente;
     char senha_remetente[max_senha];
     int cpf_destinatario;
-    char senha_destinatario[max_senha];
-    int posicao_destinatario;
+    int posicao_destinatario = -1; // Inicialize com um valor que não é uma posição válida no vetor de clientes
     float valor;
 
-    // Solicitar CPF e senha do usuário para autenticação
+    // Solicitar CPF e senha do remetente para autenticação
     printf("CPF: ");
     scanf("%d", &cpf_remetente);
-    clearBuffer(); // Limpar o buffer após a leitura do inteiro
+    clearBuffer(); 
     printf("Senha: ");
     fgets(senha_remetente, max_senha, stdin);
     senha_remetente[strcspn(senha_remetente, "\n")] = '\0'; // Remover o caractere de nova linha
@@ -276,66 +275,67 @@ int tranferencia(Cliente clientes[], int *posicao) {
     // Verifica se o CPF e a senha correspondem a algum cliente
     int i;
     for (i = 0; i < *posicao; i++) {
-        if (clientes[i].cpf == cpf_remetente && strcmp(clientes[i].senha, senha_remetente) == 0) 
-        {
-          posicao_destinatario = i;
-          // Solicitar CPF e senha do usuário para autenticação
-        printf("CPF do destinatário: ");
-        scanf("%d", &cpf_destinatario);
-        for (int j = 0; j < *posicao; j++) {
-        if (clientes[j].cpf == cpf_destinatario ){
-            printf("Valor: ");
-            scanf("%f" , &valor);
-
-            float verificando_limite_saldo = clientes[posicao_destinatario].saldo - valor;
-
-          //verificando se ultrapassa o limite.
-            if (verificando_limite_saldo < -1000 && strcmp(clientes[i].tipo_conta, "Comum") == 0) {
-                printf("\nSeu limite de saldo negativo é -1000\n");
-                printf("Impossível realizar a transferência, seu saldo ficaria %.2f\n", verificando_limite_saldo);
-                return 0;}
-
-            else if (verificando_limite_saldo < -5000 && strcmp(clientes[i].tipo_conta, "Plus") == 0) {
-                printf("\nSeu limite de saldo negativo é -5000\n");
-                printf("Impossível realizar a transferência, seu saldo ficaria %.2f\n", verificando_limite_saldo);
-                return 0;}
-
-            if(valor <= 0){
-              printf("Impossível realizar transferência com este valor!\n");
-              return 0;
-            }
-
-            else{
-              clientes[j].saldo += valor;
-              clientes[posicao_destinatario].saldo -= valor;
-
-              //Registrando no extrato.
-              strcpy(clientes[i].extrato[clientes[i].num_transacoes].tipo, "Transferência");
-              clientes[j].extrato[clientes[j].num_transacoes].valor = valor;
-              clientes[j].num_transacoes++;
-              strcpy(clientes[i].extrato[clientes[i].num_transacoes].tipo, "Transferência");
-              clientes[posicao_destinatario].extrato[clientes[posicao_destinatario].num_transacoes].valor = valor;
-              clientes[posicao_destinatario].num_transacoes++;
-              printf("Transferência realizada com sucesso!.\n");
-              return 1;
-            }
-        }
-        else  {
-          printf("Destinatário não encontrado!\n");
-          return 0;
-            }
-
-
-        }
-        
-        
-            
+        if (clientes[i].cpf == cpf_remetente && strcmp(clientes[i].senha, senha_remetente) == 0) {
+            posicao_destinatario = i; // Atualize a posição do remetente
+            break; // Pare o loop assim que o remetente for encontrado
         }
     }
 
-    // Se o loop terminar, significa que o cliente não foi encontrado
-    printf("CPF ou senha incorretos. Não foi possível realizar o depósito.\n");
-    return 0;
+    // Verificar se o remetente foi encontrado
+    if (posicao_destinatario == -1) {
+        printf("CPF ou senha incorretos. Não foi possível realizar a transferência.\n");
+        return 0;
+    }
+
+    // Solicitar CPF do destinatário
+    printf("CPF do destinatário: ");
+    scanf("%d", &cpf_destinatario);
+
+    // Verificar se o destinatário existe
+    int encontrado = 0;
+    for (int j = 0; j < *posicao; j++) {
+        if (clientes[j].cpf == cpf_destinatario) {
+            encontrado = 1;
+            // Solicitar o valor a ser transferido
+            printf("Valor da transferência: ");
+            scanf("%f", &valor);
+            // Verificar se o valor da transferência é válido
+            if (valor <= 0) {
+                printf("Valor de transferência inválido.\n");
+                return 0;
+            }
+            // Verificar se o saldo do remetente é suficiente para a transferência
+            float saldo_remetente = clientes[posicao_destinatario].saldo;
+            if (saldo_remetente < valor) {
+                printf("Saldo insuficiente para realizar a transferência.\n");
+                return 0;
+            }
+            // Realizar a transferência
+            clientes[posicao_destinatario].saldo -= valor; // Descontar o valor transferido do saldo do remetente
+            clientes[j].saldo += valor; // Adicionar o valor transferido ao saldo do destinatário
+
+// Registrando a operação no histórico do remetente
+            strcpy(clientes[posicao_destinatario].extrato[clientes[posicao_destinatario].num_transacoes].tipo, "transferência -");
+            clientes[posicao_destinatario].extrato[clientes[posicao_destinatario].num_transacoes].valor = valor;
+clientes[posicao_destinatario].num_transacoes++;
+
+// Registrando no histórico do destinatário
+            strcpy(clientes[j].extrato[clientes[j].num_transacoes].tipo, "transferência +");
+clientes[j].extrato[clientes[j].num_transacoes].valor = valor;
+clientes[j].num_transacoes++;
+
+            printf("Transferência realizada com sucesso!\n");
+            return 1;
+        }
+    }
+
+    // Se o loop terminar, significa que o destinatário não foi encontrado
+    if (!encontrado) {
+        printf("Destinatário não encontrado.\n");
+        return 0;
+    }
+
+    return 0; // Isso só será alcançado se algo der errado
 }
 
 void clearBuffer() {
