@@ -6,7 +6,6 @@
 #include <ctype.h>
 
 
-
 int contem_apenas_letras(const char *str) {
   if (*str == '\0') {
       return 0; 
@@ -145,6 +144,9 @@ int debitar(Cliente clientes[], int *posicao) {
             clientes[i].saldo -= valor;
             printf("Valor sacado: R$%.2f\n", valor);
 
+            strcpy(clientes[i].extrato[clientes[i].num_transacoes].tipo, "Débito");
+            clientes[i].extrato[clientes[i].num_transacoes].valor = valor;
+            clientes[i].num_transacoes++;
             // Registrando transação
             printf("Transação registrada com sucesso!\n");
 
@@ -156,9 +158,6 @@ int debitar(Cliente clientes[], int *posicao) {
     printf("\nCPF ou senha não encontrados.\n");
     return 0;
 }
-
-
-
 
 int depositar(Cliente clientes[], int *posicao) {
     int cpf;
@@ -187,6 +186,11 @@ int depositar(Cliente clientes[], int *posicao) {
             }
             // Realizar o depósito adicionando o valor ao saldo do cliente
             clientes[i].saldo += valor_deposito;
+
+            // Registrando a operação no histórico
+            strcpy(clientes[i].extrato[clientes[i].num_transacoes].tipo, "Depósito");
+            clientes[i].extrato[clientes[i].num_transacoes].valor = valor_deposito;
+            clientes[i].num_transacoes++;
             printf("Depósito realizado com sucesso. Novo saldo: %.2f\n", clientes[i].saldo);
             return 1;
         }
@@ -197,10 +201,61 @@ int depositar(Cliente clientes[], int *posicao) {
     return 0;
 }
 
-int extrato() {
-  printf("função extrato\n");
-  return 1;
+int extrato(Cliente clientes[], int *posicao) {
+    int cpf;
+    char senha[max_senha];
+
+    // Solicitar CPF e senha do usuário para autenticação
+    printf("CPF: ");
+    scanf("%d", &cpf);
+    clearBuffer(); // Limpar o buffer após a leitura do inteiro
+    printf("Senha: ");
+    fgets(senha, max_senha, stdin);
+    senha[strcspn(senha, "\n")] = '\0'; // Remover o caractere de nova linha
+
+    // Verifica se o CPF e a senha correspondem a algum cliente
+    int i;
+    for (i = 0; i < *posicao; i++) {
+        if (clientes[i].cpf == cpf && strcmp(clientes[i].senha, senha) == 0) {
+            // CPF e senha correspondem, criar e escrever no arquivo de extrato
+            FILE *extrato_file;
+            char filename[50]; // Nome do arquivo será o CPF do cliente
+            sprintf(filename, "%d.txt", cpf);
+            extrato_file = fopen(filename, "w");
+            if (extrato_file == NULL) {
+                printf("Erro ao abrir o arquivo para escrita.\n");
+                return 0;
+            }
+
+            // Escrever no arquivo
+            fprintf(extrato_file, "Extrato de operações para o cliente: %s\n", clientes[i].nome);
+            fprintf(extrato_file, "CPF: %d\n", clientes[i].cpf);
+            fprintf(extrato_file, "Tipo de conta: %s\n", clientes[i].tipo_conta);
+            fprintf(extrato_file, "Saldo atual: %.2f\n\n", clientes[i].saldo);
+            fprintf(extrato_file, "Histórico de operações:\n");
+
+            // Iterar sobre as transações do extrato e escrevê-las no arquivo
+            for (int j = 0; j < clientes[i].num_transacoes; j++) {
+                fprintf(extrato_file, "Operação %d:\n", j + 1);
+                fprintf(extrato_file, "Tipo: %s\n", clientes[i].extrato[j].tipo); // Corrigido
+                fprintf(extrato_file, "Valor: %.2f\n", clientes[i].extrato[j].valor);
+                // Aqui você pode adicionar mais detalhes sobre as operações, como tarifas, datas, etc.
+                fprintf(extrato_file, "\n");
+            }
+
+            fclose(extrato_file); // Fechar o arquivo
+
+            printf("Extrato gerado com sucesso! Consulte o arquivo \"%s\".\n", filename);
+            return 1;
+        }
+    }
+
+    // Se o loop terminar, significa que o cliente não foi encontrado
+    printf("CPF ou senha incorretos. Não foi possível gerar o extrato.\n");
+    return 0;
 }
+
+
 
 int tranferencia(Cliente clientes[], int *posicao) {
     int cpf_remetente;
@@ -212,7 +267,7 @@ int tranferencia(Cliente clientes[], int *posicao) {
     // Solicitar CPF e senha do remetente para autenticação
     printf("CPF: ");
     scanf("%d", &cpf_remetente);
-    clearBuffer(); // Limpar o buffer após a leitura do inteiro
+    clearBuffer(); 
     printf("Senha: ");
     fgets(senha_remetente, max_senha, stdin);
     senha_remetente[strcspn(senha_remetente, "\n")] = '\0'; // Remover o caractere de nova linha
@@ -258,6 +313,17 @@ int tranferencia(Cliente clientes[], int *posicao) {
             // Realizar a transferência
             clientes[posicao_destinatario].saldo -= valor; // Descontar o valor transferido do saldo do remetente
             clientes[j].saldo += valor; // Adicionar o valor transferido ao saldo do destinatário
+
+// Registrando a operação no histórico do remetente
+            strcpy(clientes[posicao_destinatario].extrato[clientes[posicao_destinatario].num_transacoes].tipo, "transferência -");
+            clientes[posicao_destinatario].extrato[clientes[posicao_destinatario].num_transacoes].valor = valor;
+clientes[posicao_destinatario].num_transacoes++;
+
+// Registrando no histórico do destinatário
+            strcpy(clientes[j].extrato[clientes[j].num_transacoes].tipo, "transferência +");
+clientes[j].extrato[clientes[j].num_transacoes].valor = valor;
+clientes[j].num_transacoes++;
+
             printf("Transferência realizada com sucesso!\n");
             return 1;
         }
@@ -271,7 +337,6 @@ int tranferencia(Cliente clientes[], int *posicao) {
 
     return 0; // Isso só será alcançado se algo der errado
 }
-
 
 void clearBuffer() {
   int c;
