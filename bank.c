@@ -370,6 +370,35 @@ int salvar_em_binario(Cliente clientes[], int *posicao) {
   return 1;
 }
 
+int carregar_de_binario(Cliente clientes[], int *posicao) {
+
+  FILE *f = fopen("Clientes.bin", "rb");
+  if (f == NULL) {
+    printf("Não há clientes salvo no arquivo\n");
+    return 0;
+  }
+
+  int qtd = fread(clientes, total, sizeof(Cliente), f);
+  if (qtd == 0) {
+    printf("Erro ao ler os clientes do arquivo\n");
+    return 0;
+  }
+
+  qtd = fread(posicao, 1, sizeof(int), f);
+  if (qtd == 0) {
+    printf("Erro ao ler a posição do arquivo\n");
+    return 0;
+  }
+
+  if (fclose(f)) {
+    printf("Erro ao fechar o arquivo\n");
+    return 0;
+  }
+
+  printf("\nClientes carregados com sucesso!\n");
+  return 1;
+}
+
 
 void clearBuffer() {
   int c;
