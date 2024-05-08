@@ -11,6 +11,7 @@
 typedef struct {
     char tipo[max_tipo];
     float valor;
+    float tarifa;
 } Transacao;
 
 typedef struct {
