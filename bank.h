@@ -32,4 +32,5 @@ int debitar(Cliente clientes[], int *posicao);
 int depositar(Cliente clientes[], int *posicao);
 int extrato(Cliente clientes[], int *posicao);
 int tranferencia(Cliente clientes[], int *posicao);
+int salvar_em_binario(Cliente clientes[], int *posicao);
 void clearBuffer();
