@@ -33,7 +33,8 @@ int main() {
     } else if (opcao == 7) {
       tranferencia(clientes, &posicao);
     } else if (opcao == 0) {
-      printf("Saindo...");
+      salvar_em_binario(clientes, &posicao);
+      printf("\nSaindo...\n");
       break;
     } else {
       printf("Opção inválida!\n");

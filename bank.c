@@ -343,6 +343,34 @@ clientes[j].num_transacoes++;
     return 0; // Isso só será alcançado se algo der errado
 }
 
+int salvar_em_binario(Cliente clientes[], int *posicao) {
+  FILE *f = fopen("Clientes.bin", "wb");
+  if (f == NULL) {
+    printf("Erro ao abrir o arquivo para leitura\n");
+    return 0;
+  }
+    
+  int qtd = fwrite(clientes, total, sizeof(Cliente), f);
+  if (qtd == 0) {
+    printf("Erro ao ler os clientes do arquivo\n");
+    return 0;
+  }
+  qtd = fwrite(posicao, 1, sizeof(int), f);
+  if (qtd == 0) {
+    printf("Erro ao ler a posição do arquivo\n");
+    return 0;
+  }
+  if (fclose(f)) {
+    printf("Erro ao fechar o arquivo após a leitura\n");
+    return 0;
+  }
+
+  printf(
+      "\nOs dados foram salvos em arquivo binário com o nome: 'Clientes.bin'. \n");
+  return 1;
+}
+
+
 void clearBuffer() {
   int c;
   while ((c = getchar()) != '\n' && c != EOF)
