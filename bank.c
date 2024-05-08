@@ -146,6 +146,7 @@ int debitar(Cliente clientes[], int *posicao) {
 
             strcpy(clientes[i].extrato[clientes[i].num_transacoes].tipo, "Débito");
             clientes[i].extrato[clientes[i].num_transacoes].valor = valor;
+            clientes[i].extrato[clientes[i].num_transacoes].tarifa = tarifa_saque;
             clientes[i].num_transacoes++;
             // Registrando transação
             printf("Transação registrada com sucesso!\n");
@@ -188,8 +189,9 @@ int depositar(Cliente clientes[], int *posicao) {
             clientes[i].saldo += valor_deposito;
 
             // Registrando a operação no histórico
-            strcpy(clientes[i].extrato[clientes[i].num_transacoes].tipo, "Depósito");
-            clientes[i].extrato[clientes[i].num_transacoes].valor = valor_deposito;
+strcpy(clientes[i].extrato[clientes[i].num_transacoes].tipo, "Depósito");
+clientes[i].extrato[clientes[i].num_transacoes].valor = valor_deposito;
+clientes[i].extrato[clientes[i].num_transacoes].tarifa = 0;
             clientes[i].num_transacoes++;
             printf("Depósito realizado com sucesso. Novo saldo: %.2f\n", clientes[i].saldo);
             return 1;
@@ -237,8 +239,10 @@ int extrato(Cliente clientes[], int *posicao) {
             // Iterar sobre as transações do extrato e escrevê-las no arquivo
             for (int j = 0; j < clientes[i].num_transacoes; j++) {
                 fprintf(extrato_file, "Operação %d:\n", j + 1);
-                fprintf(extrato_file, "Tipo: %s\n", clientes[i].extrato[j].tipo); // Corrigido
+                fprintf(extrato_file, "Tipo: %s\n", clientes[i].extrato[j].tipo); 
+                fprintf(extrato_file, "tarifa: %.2f\n", clientes[i].extrato[j].tarifa);
                 fprintf(extrato_file, "Valor: %.2f\n", clientes[i].extrato[j].valor);
+                
                 // Aqui você pode adicionar mais detalhes sobre as operações, como tarifas, datas, etc.
                 fprintf(extrato_file, "\n");
             }
@@ -315,13 +319,14 @@ int tranferencia(Cliente clientes[], int *posicao) {
             clientes[j].saldo += valor; // Adicionar o valor transferido ao saldo do destinatário
 
 // Registrando a operação no histórico do remetente
-            strcpy(clientes[posicao_destinatario].extrato[clientes[posicao_destinatario].num_transacoes].tipo, "transferência -");
-            clientes[posicao_destinatario].extrato[clientes[posicao_destinatario].num_transacoes].valor = valor;
+            strcpy(clientes[posicao_destinatario].extrato[clientes[posicao_destinatario].num_transacoes].tipo, "transferência -");       clientes[posicao_destinatario].extrato[clientes[posicao_destinatario].num_transacoes].valor = valor;
+clientes[posicao_destinatario].extrato[clientes[posicao_destinatario].num_transacoes].tarifa = 0;
 clientes[posicao_destinatario].num_transacoes++;
 
 // Registrando no histórico do destinatário
             strcpy(clientes[j].extrato[clientes[j].num_transacoes].tipo, "transferência +");
 clientes[j].extrato[clientes[j].num_transacoes].valor = valor;
+clientes[i].extrato[clientes[i].num_transacoes].tarifa = 0;
 clientes[j].num_transacoes++;
 
             printf("Transferência realizada com sucesso!\n");
