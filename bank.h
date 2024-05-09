@@ -27,7 +27,7 @@ typedef struct {
 // Funções
 int criar_cliente(Cliente clientes[], int *posicao);
 int listar_clientes(Cliente clientes[], int *posicao);
-int apagar_cliente();
+int apagar_cliente(Cliente clientes[], int *posicao);
 int debitar(Cliente clientes[], int *posicao);
 int depositar(Cliente clientes[], int *posicao);
 int extrato(Cliente clientes[], int *posicao);

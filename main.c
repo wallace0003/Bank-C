@@ -21,7 +21,7 @@ int main() {
     if (opcao == 1) {
       criar_cliente(clientes, &posicao);
     } else if (opcao == 2) {
-      apagar_cliente();
+      apagar_cliente(clientes, &posicao);
     } else if (opcao == 3) {
       listar_clientes(clientes, &posicao);
     } else if (opcao == 4) {
