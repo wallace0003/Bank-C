@@ -90,26 +90,24 @@ int apagar_cliente(Cliente clientes[], int *posicao) {
       for (int i = 0; i <= *posicao; i++) {
         if(clientes[i].cpf == cpfCliente){
 
-            clientes[i].cpf = 0;
-            clientes[i].saldo = 0;
-            clientes[i].num_transacoes = 0;
-            strcpy(clientes[i].nome, "");
-            strcpy(clientes[i].tipo_conta, "");
-            strcpy(clientes[i].senha, "");
+            clientes[i].cpf = clientes[i+1].cpf;
+            clientes[i].saldo = clientes[i+1].saldo;
+            clientes[i].num_transacoes = clientes[i+1].num_transacoes;
+            strcpy(clientes[i].nome, clientes[i+1].nome);
+            strcpy(clientes[i].tipo_conta, clientes[i+1].tipo_conta);
+            strcpy(clientes[i].senha, clientes[i+1].senha);
 
             printf("Cliente removido com sucesso!");
-            for( int j = i ; j < *posicao; j++){
-                clientes[j] = clientes[j+1];
-            }
-
-              (clientes--);
 
         }
 
+      
 
 
       }
 
+
+    *posicao = *posicao - 1;
 
 
 
