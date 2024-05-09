@@ -72,10 +72,50 @@ int tipo_con;
   return 1; // Retorna 1 indicando que o cliente foi criado com sucesso
 }
 
-int apagar_cliente() {
+
+
+int apagar_cliente(Cliente clientes[], int *posicao) {
   printf("função apagar\n");
+
+    int cpfCliente = 0;
+
+     if (*posicao == 0) {
+        printf("Não há contatos a serem removidos.");
+        return 0;
+      }
+
+    printf("Digite o cpf do cliente que deseja remover: ");
+    scanf("%d" , &cpfCliente);
+
+      for (int i = 0; i <= *posicao; i++) {
+        if(clientes[i].cpf == cpfCliente){
+
+            clientes[i].cpf = 0;
+            clientes[i].saldo = 0;
+            clientes[i].num_transacoes = 0;
+            strcpy(clientes[i].nome, "");
+            strcpy(clientes[i].tipo_conta, "");
+            strcpy(clientes[i].senha, "");
+
+            printf("Cliente removido com sucesso!");
+            for( int j = i ; j < *posicao; j++){
+                clientes[j] = clientes[j+1];
+            }
+
+              (clientes--);
+
+        }
+
+
+
+      }
+
+
+
+
   return 1;
 }
+
 
 int listar_clientes(Cliente clientes[], int *posicao) {
   // Verificação de há contatos
