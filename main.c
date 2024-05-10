@@ -4,6 +4,7 @@
 int main() {
   Cliente clientes[total];
   int posicao = 0;
+  carregar_de_binario(clientes, &posicao);
   while (1) {
     int opcao;
     printf("\n");
