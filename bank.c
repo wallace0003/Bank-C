@@ -72,47 +72,45 @@ int tipo_con;
   return 1; // Retorna 1 indicando que o cliente foi criado com sucesso
 }
 
-
-
 int apagar_cliente(Cliente clientes[], int *posicao) {
-  printf("função apagar\n");
-
     int cpfCliente = 0;
 
-     if (*posicao == 0) {
-        printf("Não há contatos a serem removidos.");
+    if (*posicao == 0) {
+        printf("Não há clientes a serem removidos.\n");
         return 0;
-      }
+    }
 
-    printf("Digite o cpf do cliente que deseja remover: ");
-    scanf("%d" , &cpfCliente);
+    printf("Digite o CPF do cliente que deseja remover: ");
+    scanf("%d", &cpfCliente);
 
-      for (int i = 0; i <= *posicao; i++) {
-        if(clientes[i].cpf == cpfCliente){
+    int encontrado = 0; 
 
-            clientes[i].cpf = clientes[i+1].cpf;
-            clientes[i].saldo = clientes[i+1].saldo;
-            clientes[i].num_transacoes = clientes[i+1].num_transacoes;
-            strcpy(clientes[i].nome, clientes[i+1].nome);
-            strcpy(clientes[i].tipo_conta, clientes[i+1].tipo_conta);
-            strcpy(clientes[i].senha, clientes[i+1].senha);
-
-            printf("Cliente removido com sucesso!");
-
+    for (int i = 0; i < *posicao; i++) {
+        if (clientes[i].cpf == cpfCliente) {
+            encontrado = 1; 
+            for (int j = i; j < *posicao - 1; j++) {
+                clientes[j].cpf = clientes[j + 1].cpf;
+                clientes[j].saldo = clientes[j + 1].saldo;
+                clientes[j].num_transacoes = clientes[j + 1].num_transacoes;
+                strcpy(clientes[j].nome, clientes[j + 1].nome);
+                strcpy(clientes[j].tipo_conta, clientes[j + 1].tipo_conta);
+                strcpy(clientes[j].senha, clientes[j + 1].senha);
+            }
+            printf("Cliente removido com sucesso!\n");
+            break; // Parar o loop após encontrar o cliente
         }
+    }
 
-      
-
-
-      }
-
+    if (!encontrado) {
+        printf("Cliente com CPF %d não encontrado.\n", cpfCliente);
+        return 0;
+    }
 
     *posicao = *posicao - 1;
 
-
-
-  return 1;
+    return 1;
 }
+
 
 
 int listar_clientes(Cliente clientes[], int *posicao) {
