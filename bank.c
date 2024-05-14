@@ -301,8 +301,9 @@ int tranferencia(Cliente clientes[], int *posicao) {
     int cpf_remetente;
     char senha_remetente[max_senha];
     int cpf_destinatario;
-    int posicao_destinatario = -1; // Inicialize com um valor que não é uma posição válida no vetor de clientes
+    int posicao_remetente = -1; // Inicialize com um valor que não é uma posição válida no vetor de clientes
     float valor;
+    float taxa;
 
     // Solicitar CPF e senha do remetente para autenticação
     printf("CPF: ");
@@ -316,16 +317,20 @@ int tranferencia(Cliente clientes[], int *posicao) {
     int i;
     for (i = 0; i < *posicao; i++) {
         if (clientes[i].cpf == cpf_remetente && strcmp(clientes[i].senha, senha_remetente) == 0) {
-            posicao_destinatario = i; // Atualize a posição do remetente
+            posicao_remetente = i; // Atualize a posição do remetente
             break; // Pare o loop assim que o remetente for encontrado
         }
     }
 
+    
+
     // Verificar se o remetente foi encontrado
-    if (posicao_destinatario == -1) {
+    if (posicao_remetente == -1) {
         printf("CPF ou senha incorretos. Não foi possível realizar a transferência.\n");
         return 0;
     }
+
+    
 
     // Solicitar CPF do destinatário
     printf("CPF do destinatário: ");
@@ -339,32 +344,59 @@ int tranferencia(Cliente clientes[], int *posicao) {
             // Solicitar o valor a ser transferido
             printf("Valor da transferência: ");
             scanf("%f", &valor);
+
             // Verificar se o valor da transferência é válido
             if (valor <= 0) {
                 printf("Valor de transferência inválido.\n");
                 return 0;
             }
-            // Verificar se o saldo do remetente é suficiente para a transferência
-            float saldo_remetente = clientes[posicao_destinatario].saldo;
-            if (saldo_remetente < valor) {
-                printf("Saldo insuficiente para realizar a transferência.\n");
+
+            float tarifa_saque;
+
+            //Verificando se a conta do remetente é comum ou plus e adicionando
+            // a tarifa.
+            if (strcmp(clientes[posicao_remetente].tipo_conta, "Comum") == 0) {
+                tarifa_saque = 0.05 * valor;
+            } else if (strcmp(clientes[posicao_remetente].tipo_conta, "Plus") == 0) {
+                tarifa_saque = 0.03 * valor;
+            }
+
+            // Verificar se o saldo do remetente é suficiente
+            float verificando_limite_saldo = clientes[posicao_remetente].saldo - 
+            (valor + tarifa_saque);
+            
+
+            if (verificando_limite_saldo < -1000 && strcmp(clientes[posicao_remetente].tipo_conta, "Comum") == 0) {
+                printf("\nSeu limite de saldo negativo é -1000\n");
+                printf("Impossível realizar a transferência, seu saldo ficaria %.2f\n", verificando_limite_saldo);
+                return 0;
+            } else if (verificando_limite_saldo < -5000 && strcmp(clientes[posicao_remetente].tipo_conta, "Plus") == 0) {
+                printf("\nSeu limite de saldo negativo é -5000\n");
+                printf("Impossível realizar A transferência, seu saldo ficaria: R$%.2f\n", verificando_limite_saldo);
                 return 0;
             }
+
+
+
+            
+            
+            
             // Realizar a transferência
-            clientes[posicao_destinatario].saldo -= valor; // Descontar o valor transferido do saldo do remetente
+            clientes[posicao_remetente].saldo -= (valor + tarifa_saque); // Descontar o valor transferido do saldo do remetente + a taxa
             clientes[j].saldo += valor; // Adicionar o valor transferido ao saldo do destinatário
 
 // Registrando a operação no histórico do remetente
-            strcpy(clientes[posicao_destinatario].extrato[clientes[posicao_destinatario].num_transacoes].tipo, "transferência -");       clientes[posicao_destinatario].extrato[clientes[posicao_destinatario].num_transacoes].valor = valor;
-clientes[posicao_destinatario].extrato[clientes[posicao_destinatario].num_transacoes].tarifa = 0;
-clientes[posicao_destinatario].num_transacoes++;
+            strcpy(clientes[posicao_remetente].extrato[clientes[posicao_remetente].num_transacoes].tipo, "transferência -");       clientes[posicao_remetente].extrato[clientes[posicao_remetente].num_transacoes].valor = valor;
+clientes[posicao_remetente].extrato[clientes[posicao_remetente].num_transacoes].tarifa = tarifa_saque;
+clientes[posicao_remetente].num_transacoes++;
 
 // Registrando no histórico do destinatário
             strcpy(clientes[j].extrato[clientes[j].num_transacoes].tipo, "transferência +");
 clientes[j].extrato[clientes[j].num_transacoes].valor = valor;
-clientes[i].extrato[clientes[i].num_transacoes].tarifa = 0;
+clientes[j].extrato[clientes[j].num_transacoes].tarifa = 0;
 clientes[j].num_transacoes++;
 
+            printf("Taxa de transferência: R$%.2f\n", tarifa_saque);
             printf("Transferência realizada com sucesso!\n");
             return 1;
         }
