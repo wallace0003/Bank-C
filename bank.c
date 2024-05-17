@@ -442,7 +442,7 @@ int carregar_de_binario(Cliente clientes[], int *posicao) {
 
   FILE *f = fopen("Clientes.bin", "rb");
   if (f == NULL) {
-    printf("Não há clientes salvo no arquivo\n");
+    printf("Atenção! nenhum cliente foi salvo ainda\n");
     return 0;
   }
 
