@@ -39,8 +39,8 @@ int criar_cliente(Cliente clientes[], int *posicao) {
     return 0;
   }
 
-  printf("CPF: ");
-  scanf("%d", &clientes[*posicao].cpf);
+  printf("CPF: (Ex: 111111111111) ");
+  scanf("%ld", &clientes[*posicao].cpf);
 
 int tipo_con;
   printf("Tipo de conta (1 - Comum, 2 - Plus): ");
@@ -73,7 +73,7 @@ int tipo_con;
 }
 
 int apagar_cliente(Cliente clientes[], int *posicao) {
-    int cpfCliente = 0;
+    long cpfCliente = 0;
 
     if (*posicao == 0) {
         printf("Não há clientes a serem removidos.\n");
@@ -81,7 +81,7 @@ int apagar_cliente(Cliente clientes[], int *posicao) {
     }
 
     printf("Digite o CPF do cliente que deseja remover: ");
-    scanf("%d", &cpfCliente);
+    scanf("%ld", &cpfCliente);
 
     int encontrado = 0; 
 
@@ -124,7 +124,7 @@ int listar_clientes(Cliente clientes[], int *posicao) {
   for (int i = 0; i < *posicao; i++) {
     printf("Posição: %d\t", i + 1);
     printf("Nome: %s\t", clientes[i].nome);
-    printf("CPF: %d\t", clientes[i].cpf);
+    printf("CPF: %ld\t", clientes[i].cpf);
     printf("Tipo de conta: %s\t", clientes[i].tipo_conta);
     printf("Saldo atual: %.2f\n", clientes[i].saldo);
   }
@@ -133,13 +133,13 @@ int listar_clientes(Cliente clientes[], int *posicao) {
 
 // Função para debitar valor da conta de um cliente
 int debitar(Cliente clientes[], int *posicao) {
-    int cpf;
+    long cpf;
     char senha[max_senha];
     float valor;
 
     // Solicitando dados do usuário
     printf("CPF: ");
-    scanf("%d", &cpf);
+    scanf("%ld", &cpf);
     printf("Senha: ");
     clearBuffer();
     fgets(senha, max_senha, stdin);
@@ -197,13 +197,13 @@ int debitar(Cliente clientes[], int *posicao) {
 }
 
 int depositar(Cliente clientes[], int *posicao) {
-    int cpf;
+    long cpf;
     char senha[max_senha];
     float valor_deposito;
 
     // Solicitar CPF e senha do usuário para autenticação
     printf("CPF: ");
-    scanf("%d", &cpf);
+    scanf("%ld", &cpf);
     clearBuffer(); // Limpar o buffer após a leitura do inteiro
     printf("Senha: ");
     fgets(senha, max_senha, stdin);
@@ -240,12 +240,12 @@ clientes[i].extrato[clientes[i].num_transacoes].tarifa = 0;
 }
 
 int extrato(Cliente clientes[], int *posicao) {
-    int cpf;
+    long cpf;
     char senha[max_senha];
 
     // Solicitar CPF e senha do usuário para autenticação
     printf("CPF: ");
-    scanf("%d", &cpf);
+    scanf("%ld", &cpf);
     clearBuffer(); // Limpar o buffer após a leitura do inteiro
     printf("Senha: ");
     fgets(senha, max_senha, stdin);
@@ -258,7 +258,7 @@ int extrato(Cliente clientes[], int *posicao) {
             // CPF e senha correspondem, criar e escrever no arquivo de extrato
             FILE *extrato_file;
             char filename[50]; // Nome do arquivo será o CPF do cliente
-            sprintf(filename, "%d.txt", cpf);
+            sprintf(filename, "%ld.txt", cpf);
             extrato_file = fopen(filename, "w");
             if (extrato_file == NULL) {
                 printf("Erro ao abrir o arquivo para escrita.\n");
@@ -267,7 +267,7 @@ int extrato(Cliente clientes[], int *posicao) {
 
             // Escrever no arquivo
             fprintf(extrato_file, "Extrato de operações para o cliente: %s\n", clientes[i].nome);
-            fprintf(extrato_file, "CPF: %d\n", clientes[i].cpf);
+            fprintf(extrato_file, "CPF: %ld\n", clientes[i].cpf);
             fprintf(extrato_file, "Tipo de conta: %s\n", clientes[i].tipo_conta);
             fprintf(extrato_file, "Saldo atual: %.2f\n\n", clientes[i].saldo);
             fprintf(extrato_file, "Histórico de operações:\n");
@@ -298,16 +298,16 @@ int extrato(Cliente clientes[], int *posicao) {
 
 
 int tranferencia(Cliente clientes[], int *posicao) {
-    int cpf_remetente;
+    long cpf_remetente;
     char senha_remetente[max_senha];
-    int cpf_destinatario;
+    long cpf_destinatario;
     int posicao_remetente = -1; // Inicialize com um valor que não é uma posição válida no vetor de clientes
     float valor;
     float taxa;
 
     // Solicitar CPF e senha do remetente para autenticação
     printf("CPF: ");
-    scanf("%d", &cpf_remetente);
+    scanf("%ld", &cpf_remetente);
     clearBuffer(); 
     printf("Senha: ");
     fgets(senha_remetente, max_senha, stdin);
@@ -334,7 +334,7 @@ int tranferencia(Cliente clientes[], int *posicao) {
 
     // Solicitar CPF do destinatário
     printf("CPF do destinatário: ");
-    scanf("%d", &cpf_destinatario);
+    scanf("%ld", &cpf_destinatario);
 
     // Verificar se o destinatário existe
     int encontrado = 0;
@@ -442,7 +442,7 @@ int carregar_de_binario(Cliente clientes[], int *posicao) {
 
   FILE *f = fopen("Clientes.bin", "rb");
   if (f == NULL) {
-    printf("Não há clientes salvo no arquivo\n");
+    printf("Atenção! nenhum cliente foi salvo ainda\n");
     return 0;
   }
 
