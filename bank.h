@@ -16,7 +16,7 @@ typedef struct {
 
 typedef struct {
     char nome[max_nome];
-    int cpf;
+    long cpf;
     char tipo_conta[max_tipo_conta];
     float saldo;
     char senha[max_senha];
