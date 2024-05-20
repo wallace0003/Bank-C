@@ -39,7 +39,7 @@ int criar_cliente(Cliente clientes[], int *posicao) {
     return 0;
   }
 
-  printf("CPF: (Ex: 111111111111) ");
+  printf("CPF (Ex: 111111111111): ");
   scanf("%ld", &clientes[*posicao].cpf);
 
 int tipo_con;
@@ -102,7 +102,7 @@ int apagar_cliente(Cliente clientes[], int *posicao) {
     }
 
     if (!encontrado) {
-        printf("Cliente com CPF %d não encontrado.\n", cpfCliente);
+        printf("Cliente com CPF %ld não encontrado.\n", cpfCliente);
         return 0;
     }
 
